@@ -1,0 +1,68 @@
+version: '3'
+
+vars:
+  VENV: .venv
+  PYTHON_BIN: '{{.VENV}}/bin/python'
+  PIP_BIN: '{{.VENV}}/bin/pip'
+  PYTEST_BIN: '{{.VENV}}/bin/pytest'
+  RUFF_BIN: '{{.VENV}}/bin/ruff'
+  MYPY_BIN: '{{.VENV}}/bin/mypy'
+
+tasks:
+  ensure-venv:
+    desc: Create the local virtualenv if missing.
+    status:
+      - test -x {{.PYTHON_BIN}}
+    cmds:
+      - python -m venv {{.VENV}}
+
+  install:
+    desc: Mirror the README install snippet to entangle docs with reality.
+    deps: [ensure-venv]
+    cmds:
+      - '{{.PIP_BIN}} install -e ".[dev]"'
+      - '{{.PYTEST_BIN}}'
+
+  lint:
+    desc: Run Ruff over source and tests.
+    deps: [ensure-venv]
+    cmds:
+      - '{{.RUFF_BIN}} check src tests'
+
+  typecheck:
+    desc: Run mypy over the library sources.
+    deps: [ensure-venv]
+    cmds:
+      - '{{.MYPY_BIN}} src'
+
+  test:
+    desc: Run the pytest suite.
+    deps: [ensure-venv]
+    cmds:
+      - '{{.PYTEST_BIN}}'
+
+  qa:
+    desc: Run the standard lint -> typecheck -> test chain.
+    deps: [lint, typecheck, test]
+
+  docs:verify-install:
+    desc: Assert README install block matches the automated steps.
+    silent: true
+    cmds:
+      - grep -F "python -m venv .venv" README.md >/dev/null
+      - grep -F 'pip install -e ".[dev]"' README.md >/dev/null
+      - grep -F "pytest" README.md >/dev/null
+
+  activate:
+    desc: Spawn an interactive shell with the virtualenv activated.
+    deps: [ensure-venv]
+    interactive: true
+    cmds:
+      - |
+        bash -lc 'exec bash --rcfile <(cat <<'"'"'TASKRC'"'"'
+        if [ -f "$HOME/.bashrc" ]; then source "$HOME/.bashrc"; fi
+        export VIRTUAL_ENV_DISABLE_PROMPT=1
+        source {{.VENV}}/bin/activate
+        PS1="(.venv C-d to deactivate) $PS1"
+        TASKRC
+        ) -i'
