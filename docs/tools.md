@@ -1,3 +1,8 @@
+# Tooling Source (Literate Notes)
+
+All custom tooling lives in this document. Right now there is a single script, `tools/tangle_docs.py`, but the pattern generalizes. Delete `tools/` and rerun `task docs:tangle` to recreate the scripts from these fenced blocks.
+
+```python file=tools/tangle_docs.py
 #!/usr/bin/env python3
 """Tangle Markdown code blocks into source files.
 
@@ -6,9 +11,9 @@ Usage:
 
 Each fenced code block must look like:
 
-```python file=src/path/to/file.py
+~~~python file=src/path/to/file.py
 # code
-```
+~~~
 
 The script writes the code (with a generated header) to the target file, making
 parent directories as needed.
@@ -26,6 +31,7 @@ HEADER = (
     "# Do not edit by hand; edit the literate source instead.\n\n"
 )
 
+FENCE = chr(96) * 3  # backtick literal without embedding three backticks here
 
 class TangleError(Exception):
     pass
@@ -38,7 +44,7 @@ def parse_blocks(path: pathlib.Path) -> Dict[pathlib.Path, str]:
     target: pathlib.Path | None = None
 
     for lineno, line in enumerate(path.read_text().splitlines(), start=1):
-        if line.startswith("```"):
+        if line.startswith(FENCE):
             if not inside:
                 inside = True
                 info_line = line[3:].strip()
@@ -57,7 +63,6 @@ def parse_blocks(path: pathlib.Path) -> Dict[pathlib.Path, str]:
         if inside and capturing and target is not None:
             blocks[target].append(line)
 
-    # Clean up placeholders and join
     final: Dict[pathlib.Path, str] = {}
     for target_path, lines in blocks.items():
         content = "\n".join(lines).rstrip() + "\n"
@@ -116,3 +121,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+```

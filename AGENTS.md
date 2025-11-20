@@ -12,6 +12,7 @@ Son, before you touch a single line, internalize this: **there is no “loose”
 - `docs/library.md`: **sole source of truth** for the reusable `agentm` package and its regression test (`tests/test_sanity.py`). Delete `src/agentm/**` or the test—they come back the moment you tangle this doc.
 - `docs/service.md`: usage narrative plus the end-to-end test (`tests/test_service_e2e.py`). Think of it as the “what the CLI should do” manifesto.
 - `docs/service_impl.md`: describes the actual service implementation (`src/agentm_service/__init__.py` + `__main__.py`). If you edit those generated files directly, you are wrong.
+- `docs/tools.md`: authoritative source for every script under `tools/` (including the tangler itself). Delete `tools/tangle_docs.py`, run `task docs:tangle`, and it reappears with its warning header.
 - `tools/tangle_docs.py`: tiny Python script that reads code fences like ```python file=src/...``` from the docs and writes the real files with warning headers.
 - `.gitignore`: aggressively ignores `src/` and `tests/` so Git only tracks the Markdown + tooling.
 

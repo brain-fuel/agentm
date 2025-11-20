@@ -21,6 +21,7 @@ Absolutely no Python source files live in Git—they are all generated from Mark
 - Library modules + their regression tests: `docs/library.md`
 - Service implementation: `docs/service_impl.md`
 - Service usage + end-to-end test: `docs/service.md`
+- Tooling scripts (e.g., the tangler itself): `docs/tools.md`
 
 Delete `src/` and `tests/` at any time; the following command regenerates the entire tree from those documents:
 
