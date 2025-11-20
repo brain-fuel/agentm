@@ -15,10 +15,10 @@ pytest
 
 ## Literate source workflow
 
-All code under `src/` is generated from the literate docs (`docs/library.md`, `docs/service_impl.md`). Run:
+All code under `src/` and tests under `tests/` are generated from the literate docs (`docs/library.md`, `docs/service_impl.md`, `docs/tests.md`). Run:
 
 ```
 task docs:tangle
 ```
 
-to regenerate the full source tree from documentation before running tests or modifying any code. The standard `task test`/`task qa` commands already depend on this tangling step.
+to regenerate the full source + test tree from documentation before running tests or modifying any code. The standard `task test`/`task qa` commands already depend on this tangling step.

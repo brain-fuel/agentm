@@ -4,26 +4,9 @@ The AgentM library will stay focused on reusable primitives under `src/agentm/`,
 
 ## First executable story
 
-We start with an end-to-end test that treats the service strictly as an executable module. No internal APIs are assumed—only that `python -m agentm_service` exists and can be queried for status. The test currently lives in `tests/test_service_e2e.py`:
+We start with an end-to-end test that treats the service strictly as an executable module. No internal APIs are assumed—only that `python -m agentm_service` exists and can be queried for status. The canonical test case lives in the literate tests document (`docs/tests.md`, tangled into `tests/test_service_e2e.py`).
 
-```python
-import subprocess
-import sys
-
-
-def test_service_cli_reports_status():
-    """End-to-end expectation for the AgentM service executable."""
-    result = subprocess.run(
-        [sys.executable, "-m", "agentm_service", "--status"],
-        capture_output=True,
-        text=True,
-    )
-
-    assert result.returncode == 0
-    assert "AgentM service" in result.stdout
-```
-
-Running `task test -k service` is expected to fail for now because the service package does not exist. That failure is the next TODO, and once resolved the same command becomes our regression harness. The code that satisfies this story lives in `docs/service_impl.md`, which in turn tangles into `src/agentm_service/__main__.py` via `task docs:tangle`. Delete `src/agentm_service/`, run that task, and the generated sources are recreated from the doc.
+Running `task test -k service` is expected to fail for now because the service package does not exist. That failure is the next TODO, and once resolved the same command becomes our regression harness. The code that satisfies this story lives in `docs/service_impl.md`, which in turn tangles into `src/agentm_service/__main__.py` via `task docs:tangle`. Delete `src/agentm_service/` and `tests/test_service_e2e.py`, run that task, and the generated sources are recreated from the docs.
 
 ## Separation of concerns
 

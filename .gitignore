@@ -1,5 +1,6 @@
 # Generated source tree (tangled from docs)
 src/
+tests/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
