@@ -7,6 +7,7 @@ Use TDD and expand incrementally.
 ## Install
 
 ```
+task docs:tangle
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"

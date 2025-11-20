@@ -6,7 +6,7 @@ The AgentM library will stay focused on reusable primitives under `src/agentm/`,
 
 We start with an end-to-end test that treats the service strictly as an executable module. No internal APIs are assumed—only that `python -m agentm_service` exists and can be queried for status. The canonical test case lives in the literate tests document (`docs/tests.md`, tangled into `tests/test_service_e2e.py`).
 
-Running `task test -k service` is expected to fail for now because the service package does not exist. That failure is the next TODO, and once resolved the same command becomes our regression harness. The code that satisfies this story lives in `docs/service_impl.md`, which in turn tangles into `src/agentm_service/__main__.py` via `task docs:tangle`. Delete `src/agentm_service/` and `tests/test_service_e2e.py`, run that task, and the generated sources are recreated from the docs.
+Running `task test -k service` passes once `task docs:tangle` has generated the service package from `docs/service_impl.md`. If the generated files are missing (for example, after deleting `src/agentm_service/` and `tests/test_service_e2e.py`), rerun the tangling task and the test re-validates the story.
 
 ## Separation of concerns
 
