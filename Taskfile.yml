@@ -57,12 +57,33 @@ tasks:
     desc: Regenerate source files from literate documentation.
     deps: [ensure-venv]
     cmds:
+      - |
+        {{.PYTHON_BIN}} - <<'PY'
+        import pathlib, re
+
+        doc = pathlib.Path("docs/tools.md")
+        text = doc.read_text()
+        match = re.search(r"```python file=([^\n]+)\n(.*?)```", text, re.S)
+        if not match:
+            raise SystemExit("Unable to find tools/tangle_docs.py block in docs/tools.md")
+
+        target = pathlib.Path(match.group(1))
+        code = match.group(2).rstrip() + "\n"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(code)
+        PY
       - '{{.PYTHON_BIN}} tools/tangle_docs.py docs/service_impl.md docs/library.md docs/service.md docs/tools.md'
 
   clean:
     desc: Remove generated artifacts (src/, tests/, tools/) so tangling can rebuild them.
     cmds:
       - rm -rf src tests tools
+
+  build:
+    desc: Clean generated artifacts and rebuild them from docs in one go.
+    cmds:
+      - task clean
+      - task docs:tangle
 
   activate:
     desc: Spawn an interactive shell with the virtualenv activated.
