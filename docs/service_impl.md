@@ -1,6 +1,6 @@
 # AgentM Service Implementation (Literate Notes)
 
-This file is the implementation-side counterpart to `docs/service.md`. While `docs/service.md` motivates the executable story and embeds the end-to-end test, this document shows the code that satisfies that story and references the same test for traceability.
+This file is the implementation-side counterpart to `docs/service.md`. While `docs/service.md` motivates the executable story and embeds the end-to-end test, this document shows the code that satisfies that story and references the same test for traceability. **Every byte of service implementation must originate here**; the generated `src/agentm_service/**` files exist only as build artifacts.
 
 All code snippets below are tangled into the actual source tree via `task docs:tangle`. Delete the generated files, re-run that task, and the sources are recreated from this Markdown, making this document the source of truth.
 

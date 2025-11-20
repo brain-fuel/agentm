@@ -16,10 +16,16 @@ pytest
 
 ## Literate source workflow
 
-All code under `src/` and tests under `tests/` are generated from the literate docs (`docs/library.md`, `docs/service_impl.md`, `docs/tests.md`). Run:
+Absolutely no Python source files live in Git—they are all generated from Markdown. Specifically:
+
+- Library modules + their regression tests: `docs/library.md`
+- Service implementation: `docs/service_impl.md`
+- Service usage + end-to-end test: `docs/service.md`
+
+Delete `src/` and `tests/` at any time; the following command regenerates the entire tree from those documents:
 
 ```
 task docs:tangle
 ```
 
-to regenerate the full source + test tree from documentation before running tests or modifying any code. The standard `task test`/`task qa` commands already depend on this tangling step.
+to regenerate the full source + test tree from documentation before running tests or modifying any code. The standard `task test`/`task qa` commands already depend on this tangling step, so every workflow rebuilds code from its literate source of truth.

@@ -57,7 +57,7 @@ tasks:
     desc: Regenerate source files from literate documentation.
     deps: [ensure-venv]
     cmds:
-      - '{{.PYTHON_BIN}} tools/tangle_docs.py docs/service_impl.md docs/library.md docs/tests.md'
+      - '{{.PYTHON_BIN}} tools/tangle_docs.py docs/service_impl.md docs/library.md docs/service.md'
 
   activate:
     desc: Spawn an interactive shell with the virtualenv activated.
