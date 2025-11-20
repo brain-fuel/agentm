@@ -23,7 +23,7 @@ def test_service_cli_reports_status():
     assert "AgentM service" in result.stdout
 ```
 
-Running `task test -k service` is expected to fail for now because the service package does not exist. That failure is the next TODO, and once resolved the same command becomes our regression harness.
+Running `task test -k service` is expected to fail for now because the service package does not exist. That failure is the next TODO, and once resolved the same command becomes our regression harness. The code that satisfies this story lives in `docs/service_impl.md`, which in turn tangles into `src/agentm_service/__main__.py`.
 
 ## Separation of concerns
 
@@ -31,4 +31,4 @@ Running `task test -k service` is expected to fail for now because the service p
 - **Service (`agentm_service`)**: will live beside the library (e.g., `src/agentm_service/`) and depend on `agentm`. This keeps deployable concerns—configuration, adapters, CLI entrypoints—isolated.
 - **Tasks**: orchestration stays in `Taskfile.yml`; new service helpers (run, watch, package) can be added without touching the core library workflow.
 
-This literate loop—doc → test → code—is how we will keep the inevitable service glue honest while protecting backward compatibility for pure library consumers.
+This literate loop—doc → test (`tests/test_service_e2e.py`) → code (`docs/service_impl.md` → `src/agentm_service/__main__.py`)—is how we will keep the inevitable service glue honest while protecting backward compatibility for pure library consumers.

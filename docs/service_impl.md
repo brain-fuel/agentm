@@ -1,9 +1,19 @@
-"""Command-line entry point for the AgentM service.
+# AgentM Service Implementation (Literate Notes)
 
-The literate source of truth for this module lives in docs/service_impl.md. Keep
-that document and this file in sync whenever behavior changes.
-"""
+This file is the implementation-side counterpart to `docs/service.md`. While `docs/service.md` motivates the executable story and embeds the end-to-end test, this document shows the code that satisfies that story and references the same test for traceability.
 
+## Cross reference
+
+- Story + test: `docs/service.md` → `tests/test_service_e2e.py`
+- Implementation: this file → `src/agentm_service/__main__.py`
+
+Keeping the code in a single Markdown file also makes it clear what still needs explaining: whenever we change the Python module, we should update the prose around it.
+
+## CLI bootstrap
+
+The service code is intentionally tiny: it consumes the public `agentm` package, surfaces `--status`, and refuses to do anything implicit. Here is the complete module:
+
+```python
 from __future__ import annotations
 
 import argparse
@@ -50,3 +60,6 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+```
+
+Any future behavior (looping runtimes, HTTP adapters, etc.) should be added here along with an explanation and a new test reference so the literate loop stays intact.
