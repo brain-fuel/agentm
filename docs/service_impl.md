@@ -21,9 +21,18 @@ The service code is intentionally tiny: it consumes the public `agentm` package,
 Auto-generated from docs/service_impl.md by tools/tangle_docs.py.
 """
 
-from .__main__ import main
+from __future__ import annotations
+
+from typing import Any
 
 __all__ = ["main"]
+
+
+def main(*args: Any, **kwargs: Any):
+    """Proxy to the CLI entry point without importing it eagerly."""
+    from . import __main__
+
+    return __main__.main(*args, **kwargs)
 ```
 
 ```python file=src/agentm_service/__main__.py
@@ -36,8 +45,10 @@ that document and this file in sync whenever behavior changes.
 from __future__ import annotations
 
 import argparse
+import pkgutil
 import sys
 from dataclasses import dataclass
+from typing import Iterable
 
 import agentm
 
@@ -47,6 +58,7 @@ class CliConfig:
     """Simple data holder for CLI arguments."""
 
     status: bool
+    list_modules: bool
 
 
 def parse_args(argv: list[str] | None = None) -> CliConfig:
@@ -59,9 +71,23 @@ def parse_args(argv: list[str] | None = None) -> CliConfig:
         action="store_true",
         help="Report the service readiness and exit.",
     )
+    parser.add_argument(
+        "--list-modules",
+        action="store_true",
+        help="List available AgentM modules and exit.",
+    )
 
     parsed = parser.parse_args(argv)
-    return CliConfig(status=parsed.status)
+    return CliConfig(status=parsed.status, list_modules=parsed.list_modules)
+
+
+def discover_agentm_modules() -> list[str]:
+    """Inspect the installed AgentM package to build the module list."""
+    prefix = f"{agentm.__name__}."
+    modules: Iterable[str] = (
+        name for _, name, _ in pkgutil.walk_packages(agentm.__path__, prefix)
+    )
+    return sorted(set(modules))
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -70,6 +96,17 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.status:
         print(f"AgentM service ready (agentm {agentm.__version__})")
+        return 0
+
+    if args.list_modules:
+        modules = discover_agentm_modules()
+        if not modules:
+            print("No AgentM modules found.", file=sys.stderr)
+            return 1
+
+        print("Available AgentM modules:")
+        for module in modules:
+            print(f"- {module}")
         return 0
 
     # Placeholder for future subcommands (server loop, etc.).

@@ -85,6 +85,12 @@ tasks:
       - task clean
       - task docs:tangle
 
+  list-modules:
+    desc: Display available AgentM modules via the service CLI.
+    deps: [build]
+    cmds:
+      - bash -lc 'source {{.VENV}}/bin/activate && python -m agentm_service --list-modules'
+
   activate:
     desc: Spawn an interactive shell with the virtualenv activated.
     deps: [ensure-venv]

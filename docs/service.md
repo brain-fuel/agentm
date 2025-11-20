@@ -28,6 +28,34 @@ def test_service_cli_reports_status():
 
 Running `task test -k service` passes once `task docs:tangle` has generated the service package from `docs/service_impl.md`. If the generated files are missing (for example, after deleting `src/agentm_service/` and the test above), rerun the tangling task and the regenerated sources keep this story honest.
 
+## Second executable story – listing AgentM modules
+
+Now that the service proves it can report status, we want to dogfood the library layout by exposing the modules that ship with the `agentm` package. The desired usage is:
+
+```
+python -m agentm_service --list-modules
+```
+
+and the output should enumerate the modules discovered inside `agentm` (algebra, backends, runtime, viz, etc.). The CLI will introspect the installed `agentm` package (i.e., the build artifact generated from `docs/library.md`). The regression test below embeds that expectation and tangles into `tests/test_service_list_modules.py`:
+
+```python file=tests/test_service_list_modules.py
+import subprocess
+import sys
+
+
+def test_service_lists_modules():
+    result = subprocess.run(
+        [sys.executable, "-m", "agentm_service", "--list-modules"],
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0
+    assert "agentm.algebra" in result.stdout
+```
+
+This will fail until `docs/service_impl.md` grows support for the flag. Once implemented, both service tests should pass together.
+
 ## Separation of concerns
 
 - **Library (`agentm`)**: continues to host algebra/backends/runtime/viz building blocks that remain importable without any service dependencies.
