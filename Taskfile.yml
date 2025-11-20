@@ -18,26 +18,26 @@ tasks:
 
   install:
     desc: Mirror the README install snippet to entangle docs with reality.
-    deps: [ensure-venv]
+    deps: [docs:tangle]
     cmds:
       - '{{.PIP_BIN}} install -e ".[dev]"'
       - '{{.PYTEST_BIN}}'
 
   lint:
     desc: Run Ruff over source and tests.
-    deps: [ensure-venv]
+    deps: [docs:tangle]
     cmds:
       - '{{.RUFF_BIN}} check src tests'
 
   typecheck:
     desc: Run mypy over the library sources.
-    deps: [ensure-venv]
+    deps: [docs:tangle]
     cmds:
       - '{{.MYPY_BIN}} src'
 
   test:
     desc: Run the pytest suite.
-    deps: [ensure-venv]
+    deps: [docs:tangle]
     cmds:
       - '{{.PYTEST_BIN}}'
 
@@ -52,6 +52,12 @@ tasks:
       - grep -F "python -m venv .venv" README.md >/dev/null
       - grep -F 'pip install -e ".[dev]"' README.md >/dev/null
       - grep -F "pytest" README.md >/dev/null
+
+  docs:tangle:
+    desc: Regenerate source files from literate documentation.
+    deps: [ensure-venv]
+    cmds:
+      - '{{.PYTHON_BIN}} tools/tangle_docs.py docs/service_impl.md docs/library.md'
 
   activate:
     desc: Spawn an interactive shell with the virtualenv activated.

@@ -23,7 +23,7 @@ def test_service_cli_reports_status():
     assert "AgentM service" in result.stdout
 ```
 
-Running `task test -k service` is expected to fail for now because the service package does not exist. That failure is the next TODO, and once resolved the same command becomes our regression harness. The code that satisfies this story lives in `docs/service_impl.md`, which in turn tangles into `src/agentm_service/__main__.py`.
+Running `task test -k service` is expected to fail for now because the service package does not exist. That failure is the next TODO, and once resolved the same command becomes our regression harness. The code that satisfies this story lives in `docs/service_impl.md`, which in turn tangles into `src/agentm_service/__main__.py` via `task docs:tangle`. Delete `src/agentm_service/`, run that task, and the generated sources are recreated from the doc.
 
 ## Separation of concerns
 

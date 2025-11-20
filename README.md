@@ -12,3 +12,13 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 pytest
 ```
+
+## Literate source workflow
+
+All code under `src/` is generated from the literate docs (`docs/library.md`, `docs/service_impl.md`). Run:
+
+```
+task docs:tangle
+```
+
+to regenerate the full source tree from documentation before running tests or modifying any code. The standard `task test`/`task qa` commands already depend on this tangling step.

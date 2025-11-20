@@ -1,3 +1,6 @@
+# Generated source tree (tangled from docs)
+src/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
